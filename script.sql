@@ -85,7 +85,84 @@ BEGIN
 	END IF;
 END;
 $$
+--------------------------------------------------
+DO $$
+DECLARE
+	valor INT := 6;
+BEGIN
+	FOR i IN 1..10 LOOP
+		RAISE NOTICE '%', i;
+	END LOOP;
+	RAISE NOTICE '--------------------------';
+	FOR i IN 10..1 LOOP
+		RAISE NOTICE '%', i;
+	END LOOP;
+	RAISE NOTICE '--------------------------';
+	FOR i IN REVERSE 10..1 LOOP
+		RAISE NOTICE '%', i;
+	END LOOP;
+	RAISE NOTICE '--------------------------';
+	FOR i IN 1..50 BY valor + 3 LOOP
+		RAISE NOTICE '%', i;
+	END LOOP;
+	RAISE NOTICE '--------------------------';
+	FOR i IN REVERSE 50..1 BY 2 LOOP
+		RAISE NOTICE '%', i;
+	END LOOP;
+END;
+$$
+------------------------------------------------
+CREATE TABLE tb_aluno(
+	cod_aluno SERIAL PRIMARY KEY,
+	nota INT
+);
+DO $$
+BEGIN
+	--gerando 10 valores aleatoriamente
+	FOR i IN 1..10 LOOP
+		INSERT INTO tb_aluno (nota) 
+		VALUES(fn_valor_aleatorio_entre(0, 10));
+	END LOOP;
+END;
+$$
+SELECT * FROM tb_aluno;
 
+DO $$
+DECLARE
+	aluno RECORD;
+	media NUMERIC(10, 2) := 0;
+	total INT;
+BEGIN
+	FOR aluno IN
+		SELECT * FROM tb_aluno		 
+	LOOP
+		RAISE NOTICE '%', aluno.nota;
+		media := media + aluno.nota;
+	END LOOP;
+	SELECT COUNT(*) FROM tb_aluno INTO total;
+	RAISE NOTICE 'Média: %', media / total;
+END;
+$$
+----------------------------------------------
+DO $$
+DECLARE
+	valores INT[] := ARRAY[
+		fn_valor_aleatorio_entre(1, 10),
+		fn_valor_aleatorio_entre(1, 10),
+		fn_valor_aleatorio_entre(1, 10),
+		fn_valor_aleatorio_entre(1, 10),
+		fn_valor_aleatorio_entre(1, 10)
+	];
+	valor INT;
+	soma INT := 0;
+BEGIN
+	FOREACH valor IN ARRAY valores LOOP
+		RAISE NOTICE 'Valor da vez: %', valor;
+		soma := soma + valor;
+	END LOOP;
+	RAISE NOTICE 'Soma= %.', soma;
+END;
+$$
 
 
 
