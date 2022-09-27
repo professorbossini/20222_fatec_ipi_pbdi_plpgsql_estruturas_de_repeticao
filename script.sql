@@ -163,6 +163,47 @@ BEGIN
 	RAISE NOTICE 'Soma= %.', soma;
 END;
 $$
+--------------------------------------------
+DO $$
+DECLARE
+	vetor INT[] := ARRAY[1, 2, 3];
+	matriz INT[] := ARRAY[
+		[1, 2, 3],
+		[4, 5, 6],
+		[7, 8, 9]
+	];
+	var_aux INT;
+	vet_aux INT[];
+BEGIN
+	--exemplo sem SLICE com vetor
+	FOREACH var_aux IN ARRAY vetor LOOP
+		RAISE NOTICE '%', var_aux;
+	END LOOP;
+	
+	--exemplo com SLICE igual 1
+	FOREACH vet_aux SLICE 1 IN ARRAY vetor LOOP
+		RAISE NOTICE '%', vet_aux;
+		FOREACH var_aux IN ARRAY vet_aux LOOP
+			RAISE NOTICE '%', var_aux;
+		END LOOP;
+	END LOOP;
+	
+	FOREACH var_aux SLICE 0 IN ARRAY matriz LOOP
+		RAISE NOTICE '%', var_aux;
+	END LOOP;
+	
+	FOREACH vet_aux SLICE 1 IN ARRAY matriz LOOP
+		RAISE NOTICE '%', vet_aux;
+	END LOOP;
+	
+	FOREACH vet_aux SLICE 1 IN ARRAY matriz LOOP
+		RAISE NOTICE '%', vet_aux;
+	END LOOP;
+END;
+$$
+------------------------------------------
+
+
 
 
 
